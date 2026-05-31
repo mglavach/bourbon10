@@ -242,6 +242,44 @@
       animation: scrollPulse 2s ease-in-out infinite;
     }
 
+    /* ── SECTION NAV TABS ────────────────────────── */
+    .section-tabs {
+      position: sticky;
+      top: 61px;
+      z-index: 90;
+      background: var(--charcoal);
+      border-bottom: 1px solid rgba(201,145,42,0.18);
+      display: flex;
+      justify-content: center;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .section-tabs::-webkit-scrollbar { display: none; }
+
+    .section-tabs a {
+      flex-shrink: 0;
+      padding: 1rem 1.8rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+
+    .section-tabs a:hover { color: var(--cream-dark); }
+
+    .section-tabs a.tab-active {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+    }
+
     /* ── SECTION SHARED ───────────────────────────── */
     section { padding: 7rem 2rem; }
 
@@ -735,6 +773,15 @@
     </div>
   </section>
 
+  <!-- SECTION NAV TABS -->
+  <nav class="section-tabs" id="section-tabs">
+    <a href="#origin">Our Story</a>
+    <a href="#mission">Mission</a>
+    <a href="#pillars">Pillars</a>
+    <a href="#vault">The Vault</a>
+    <a href="events.html">Events</a>
+  </nav>
+
   <!-- ORIGIN STORY -->
   <section id="origin">
     <div class="section-inner">
@@ -942,6 +989,23 @@
   </footer>
 
   <script>
+    // Section tab scroll-spy
+    const tabLinks = document.querySelectorAll('.section-tabs a[href^="#"]');
+    const sections = ['origin','mission','pillars','vault'].map(id => document.getElementById(id));
+
+    function updateActiveTabs() {
+      let current = '';
+      sections.forEach(sec => {
+        if (sec && window.scrollY >= sec.offsetTop - 140) current = sec.id;
+      });
+      tabLinks.forEach(a => {
+        a.classList.toggle('tab-active', a.getAttribute('href') === '#' + current);
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveTabs, { passive: true });
+    updateActiveTabs();
+
     // Nav scroll effect
     const nav = document.getElementById('nav');
     window.addEventListener('scroll', () => {

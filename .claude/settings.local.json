@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"c:\\\\Users\\\\mglavach\\\\OneDrive - Westminster Christian School\\\\Personal\\\\Luke\\\\Bourbon10\" init)",
+      "Bash(git -C \"c:\\\\Users\\\\mglavach\\\\OneDrive - Westminster Christian School\\\\Personal\\\\Luke\\\\Bourbon10\" add .)"
+    ]
+  }
+}

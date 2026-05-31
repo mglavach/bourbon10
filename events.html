@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Events — Bourbon 10</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:        #C9912A;
+      --gold-light:  #E4B24A;
+      --gold-pale:   #F5D98B;
+      --black:       #0A0A0A;
+      --charcoal:    #1A1A1A;
+      --charcoal-mid:#2C2C2C;
+      --cream:       #F5EFE0;
+      --cream-dark:  #DDD0B4;
+      --text-muted:  #8A8070;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--cream);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 4rem;
+      background: rgba(10,10,10,0.97);
+      border-bottom: 1px solid rgba(201,145,42,0.2);
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--cream-dark);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--gold); }
+
+    /* ── PAGE HEADER ────────────────────────────────── */
+    .page-header {
+      padding: 9rem 2rem 4rem;
+      text-align: center;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 0%, rgba(201,145,42,0.1) 0%, transparent 70%),
+        var(--black);
+      border-bottom: 1px solid rgba(201,145,42,0.12);
+    }
+
+    .page-eyebrow {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      color: var(--cream);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .page-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-style: italic;
+      color: var(--text-muted);
+    }
+
+    /* ── TABS ───────────────────────────────────────── */
+    .tabs-bar {
+      position: sticky;
+      top: 61px;
+      z-index: 90;
+      background: var(--charcoal);
+      border-bottom: 1px solid rgba(201,145,42,0.15);
+      display: flex;
+      justify-content: center;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 1.2rem 3rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+      position: relative;
+    }
+
+    .tab-btn:hover { color: var(--cream-dark); }
+
+    .tab-btn.active {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+    }
+
+    .tab-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      background: var(--gold);
+      color: var(--black);
+      font-size: 0.6rem;
+      font-weight: 700;
+      border-radius: 50%;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+
+    /* ── TAB PANELS ─────────────────────────────────── */
+    .tab-panel { display: none; padding: 5rem 2rem 7rem; }
+    .tab-panel.active { display: block; }
+
+    .panel-inner { max-width: 960px; margin: 0 auto; }
+
+    /* ── UPCOMING EVENT CARD ────────────────────────── */
+    .event-hero {
+      background: var(--charcoal);
+      border: 1px solid rgba(201,145,42,0.2);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 3rem;
+    }
+
+    .event-hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(to right, var(--gold), var(--gold-pale), var(--gold));
+    }
+
+    .event-hero-inner {
+      padding: 3rem 3.5rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .event-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .event-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      color: var(--cream);
+      line-height: 1.15;
+      margin-bottom: 0.5rem;
+    }
+
+    .event-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--text-muted);
+    }
+
+    .event-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid rgba(201,145,42,0.12);
+    }
+
+    .meta-item {}
+
+    .meta-label {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.35rem;
+    }
+
+    .meta-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      color: var(--cream);
+    }
+
+    .meta-value.tbd {
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .event-badge {
+      text-align: center;
+      padding: 1.5rem;
+      background: rgba(201,145,42,0.06);
+      border: 1px solid rgba(201,145,42,0.18);
+      min-width: 120px;
+      flex-shrink: 0;
+    }
+
+    .badge-month {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .badge-year {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--cream);
+      line-height: 1.1;
+    }
+
+    .badge-tbd {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+
+    /* ── ITINERARY ──────────────────────────────────── */
+    .itinerary-header {
+      margin-bottom: 2.5rem;
+    }
+
+    .itinerary-eyebrow {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.8rem;
+    }
+
+    .itinerary-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 1rem;
+    }
+
+    .itinerary-intro {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      color: var(--cream-dark);
+      line-height: 1.8;
+      max-width: 700px;
+      border-left: 3px solid rgba(201,145,42,0.4);
+      padding-left: 1.5rem;
+    }
+
+    /* Day blocks */
+    .day-block {
+      margin-bottom: 2.5rem;
+    }
+
+    .day-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .day-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 900;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--gold-pale), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      flex-shrink: 0;
+    }
+
+    .day-label-wrap {}
+
+    .day-label {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .day-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--cream);
+    }
+
+    .day-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, rgba(201,145,42,0.3), transparent);
+    }
+
+    /* Stops timeline */
+    .stops-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      padding-left: 1.5rem;
+      border-left: 2px solid rgba(201,145,42,0.2);
+      margin-left: 1.5rem;
+    }
+
+    .stop {
+      position: relative;
+      padding: 1.5rem 1.5rem 1.5rem 2.5rem;
+      background: var(--charcoal);
+      border: 1px solid rgba(201,145,42,0.08);
+      border-left: none;
+      margin-bottom: 3px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .stop:hover {
+      background: var(--charcoal-mid);
+      border-color: rgba(201,145,42,0.25);
+    }
+
+    .stop::before {
+      content: '';
+      position: absolute;
+      left: -1.65rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 10px;
+      height: 10px;
+      background: var(--gold);
+      border-radius: 50%;
+      border: 2px solid var(--black);
+      box-shadow: 0 0 0 2px rgba(201,145,42,0.3);
+    }
+
+    .stop-type {
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.25rem;
+    }
+
+    .stop-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 0.4rem;
+    }
+
+    .stop-note {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .stop-note strong {
+      color: var(--cream-dark);
+      font-weight: 500;
+    }
+
+    /* ── CURRENT — EMPTY STATE ──────────────────────── */
+    .empty-state {
+      text-align: center;
+      padding: 6rem 2rem;
+    }
+
+    .empty-icon {
+      font-size: 3.5rem;
+      margin-bottom: 1.5rem;
+      opacity: 0.4;
+    }
+
+    .empty-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 0.8rem;
+    }
+
+    .empty-sub {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      max-width: 380px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    /* ── PAST EVENTS ────────────────────────────────── */
+    .past-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .past-card {
+      background: var(--charcoal);
+      border: 1px solid rgba(201,145,42,0.12);
+      padding: 2.5rem 3rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+
+    .past-card:hover {
+      border-color: rgba(201,145,42,0.4);
+      transform: translateX(4px);
+    }
+
+    .past-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      background: linear-gradient(to bottom, var(--gold), #7A4A10);
+    }
+
+    .past-card-eyebrow {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .past-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 0.5rem;
+    }
+
+    .past-card-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .past-card-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .btn-album {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.75rem 1.5rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.67rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      background: linear-gradient(135deg, var(--gold), #A06B10);
+      color: var(--black);
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-album:hover {
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(201,145,42,0.3);
+    }
+
+    .btn-album svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    .btn-no-album {
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* ── ANIMATIONS ─────────────────────────────────── */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(201,145,42,0.4); }
+      50%       { opacity: 0.8; box-shadow: 0 0 0 4px rgba(201,145,42,0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ─────────────────────────────────── */
+    @media (max-width: 780px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .event-hero-inner { grid-template-columns: 1fr; }
+      .event-badge { display: none; }
+      .event-meta-grid { grid-template-columns: 1fr; }
+      .past-card { grid-template-columns: 1fr; }
+      .past-card-actions { align-items: flex-start; }
+      .tab-btn { padding: 1rem 1.2rem; font-size: 0.63rem; letter-spacing: 0.12em; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">B10</a>
+    <ul class="nav-links">
+      <li><a href="index.html#origin">Our Story</a></li>
+      <li><a href="index.html#mission">Mission</a></li>
+      <li><a href="index.html#pillars">Pillars</a></li>
+      <li><a href="index.html#vault">The Vault</a></li>
+      <li><a href="events.html" class="active">Events</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+    <p class="page-eyebrow">The Brotherhood Gathers</p>
+    <h1 class="page-title">Events</h1>
+    <p class="page-sub">Milestones worth the drive. Distilleries worth the pour.</p>
+  </header>
+
+  <!-- TABS BAR -->
+  <div class="tabs-bar">
+    <button class="tab-btn active" data-tab="upcoming">
+      Upcoming <span class="tab-badge">1</span>
+    </button>
+    <button class="tab-btn" data-tab="current">
+      Current
+    </button>
+    <button class="tab-btn" data-tab="past">
+      Past <span class="tab-badge">2</span>
+    </button>
+  </div>
+
+  <!-- ── UPCOMING ─────────────────────────────────────── -->
+  <div class="tab-panel active" id="tab-upcoming">
+    <div class="panel-inner">
+
+      <!-- Event hero card -->
+      <div class="event-hero reveal">
+        <div class="event-hero-inner">
+          <div>
+            <div class="event-status">
+              <span class="status-dot"></span>
+              Upcoming Event
+            </div>
+            <h2 class="event-name">Luke is a Big Boy Now</h2>
+            <p class="event-tagline">A Kentucky weekend. The good stuff. All of us.</p>
+            <div class="event-meta-grid">
+              <div class="meta-item">
+                <div class="meta-label">Date</div>
+                <div class="meta-value tbd">November 2025 &mdash; TBD</div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">Location</div>
+                <div class="meta-value">Kentucky</div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">Housing</div>
+                <div class="meta-value tbd">TBD</div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">Distillery Days</div>
+                <div class="meta-value">3 Days &bull; 8 Stops</div>
+              </div>
+            </div>
+          </div>
+          <div class="event-badge">
+            <div class="badge-month">Nov</div>
+            <div class="badge-year">2025</div>
+            <div class="badge-tbd">Date TBD</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Itinerary -->
+      <div class="itinerary-header reveal">
+        <p class="itinerary-eyebrow">The Plan</p>
+        <h3 class="itinerary-title">Tentative Distillery Schedule</h3>
+        <p class="itinerary-intro">
+          Welcome everybody &mdash; should be a great weekend in November celebrating!
+          Right now the tentative schedule has us hitting three distinct days of distilleries.
+          More details to follow as dates lock in.
+        </p>
+      </div>
+
+      <!-- Day 1 -->
+      <div class="day-block reveal">
+        <div class="day-header">
+          <span class="day-number">01</span>
+          <div class="day-label-wrap">
+            <div class="day-label">First Day</div>
+            <div class="day-title">Craft, Character & Bob Dylan's Bar</div>
+          </div>
+          <div class="day-line"></div>
+        </div>
+        <div class="stops-list">
+          <div class="stop">
+            <div class="stop-type">NDP &bull; Independent Bottler</div>
+            <div class="stop-name">Pursuit Spirits</div>
+            <div class="stop-note">
+              A non-distiller producer &mdash; the kind of place that hunts single barrels and blends them into something worth talking about.
+              <strong>We've been doing research and this one looks great.</strong>
+            </div>
+          </div>
+          <div class="stop">
+            <div class="stop-type">Distillery</div>
+            <div class="stop-name">Rabbit Hole Distillery</div>
+            <div class="stop-note">
+              Louisville's art-forward distillery. Five-story glass atrium, open-air rickhouse views, and bourbon that earns its shelf space.
+            </div>
+          </div>
+          <div class="stop">
+            <div class="stop-type">Bar &bull; Must-Do</div>
+            <div class="stop-name">The Last Refuge</div>
+            <div class="stop-note">
+              Bob Dylan's bourbon bar housed in a converted old Methodist church.
+              <strong>Willett Purple Top for $14 a pour</strong> last time we checked.
+              The pictures alone should sell you on this one.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 2 -->
+      <div class="day-block reveal">
+        <div class="day-header">
+          <span class="day-number">02</span>
+          <div class="day-label-wrap">
+            <div class="day-label">Second Day</div>
+            <div class="day-title">The Legends, a Comeback & a Private Pour</div>
+          </div>
+          <div class="day-line"></div>
+        </div>
+        <div class="stops-list">
+          <div class="stop">
+            <div class="stop-type">Distillery &bull; Icon</div>
+            <div class="stop-name">Buffalo Trace</div>
+            <div class="stop-note">
+              The Mount Rushmore of American whiskey. Blanton's, Eagle Rare, Pappy — it all starts here.
+              Non-negotiable on any Kentucky trip.
+            </div>
+          </div>
+          <div class="stop">
+            <div class="stop-type">Distillery &bull; Redemption</div>
+            <div class="stop-name">Whiskey Thief</div>
+            <div class="stop-note">
+              <strong>Redemption for Uncle Dan.</strong> Whatever happened last time — this is where we make it right.
+            </div>
+          </div>
+          <div class="stop">
+            <div class="stop-type">Distillery &bull; Private Access</div>
+            <div class="stop-name">Castle &amp; Key</div>
+            <div class="stop-note">
+              We have a family friend with barrels housed here.
+              <strong>He's pulling strings so we can taste directly from those barrels.</strong>
+              This one is not on the public tour.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 3 -->
+      <div class="day-block reveal">
+        <div class="day-header">
+          <span class="day-number">03</span>
+          <div class="day-label-wrap">
+            <div class="day-label">Third Day</div>
+            <div class="day-title">Bardstown, History & the House of Willett</div>
+          </div>
+          <div class="day-line"></div>
+        </div>
+        <div class="stops-list">
+          <div class="stop">
+            <div class="stop-type">Distillery</div>
+            <div class="stop-name">Bardstown Bourbon Company</div>
+            <div class="stop-note">
+              One of the most celebrated newer distilleries in the state. Collaborative distilling model, spectacular campus, restaurant on-site.
+            </div>
+          </div>
+          <div class="stop">
+            <div class="stop-type">Distillery &bull; Heritage</div>
+            <div class="stop-name">Heaven Hill</div>
+            <div class="stop-note">
+              America's largest independent, family-owned spirits company. Elijah Craig, Evan Williams, Larceny — the breadth alone is worth the stop.
+            </div>
+          </div>
+          <div class="stop">
+            <div class="stop-type">Distillery &bull; The Closer</div>
+            <div class="stop-name">Willett Distillery</div>
+            <div class="stop-note">
+              We end on the hill. Pot Still Reserve, Family Estate, the Purple Top that started conversations at The Last Refuge.
+              <strong>A fitting way to close out the weekend.</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── CURRENT ──────────────────────────────────────── -->
+  <div class="tab-panel" id="tab-current">
+    <div class="panel-inner">
+      <div class="empty-state">
+        <div class="empty-icon">🥃</div>
+        <h3 class="empty-title">Nothing in the Glass Right Now</h3>
+        <p class="empty-sub">
+          No active events at the moment. Check back when the weekend draws close —
+          or head to <strong>Upcoming</strong> to see what's on deck.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PAST ─────────────────────────────────────────── -->
+  <div class="tab-panel" id="tab-past">
+    <div class="panel-inner">
+      <div class="past-grid">
+
+        <div class="past-card reveal">
+          <div>
+            <div class="past-card-eyebrow">The First Pour &bull; Est. 2024</div>
+            <h3 class="past-card-title">Landon's 21st</h3>
+            <p class="past-card-desc">
+              The one that started it all. A 21st birthday that became the founding moment of
+              Bourbon 10 — a rite of passage that turned into a lifelong pact.
+              The night the tradition was born.
+            </p>
+          </div>
+          <div class="past-card-actions">
+            <a href="https://www.icloud.com/sharedalbum/#B1v5Uzl7VI4kTrg" target="_blank" rel="noopener" class="btn-album">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+              View Album
+            </a>
+          </div>
+        </div>
+
+        <div class="past-card reveal">
+          <div>
+            <div class="past-card-eyebrow">Brotherhood Milestone</div>
+            <h3 class="past-card-title">Celebrating Houli — Men and Babies</h3>
+            <p class="past-card-desc">
+              Raising a glass to new chapters, new titles, and the men who earn them.
+              Brotherhood grows. The circle widens.
+            </p>
+          </div>
+          <div class="past-card-actions">
+            <span class="btn-no-album">Photos coming soon</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab-btn');
+    const panels = document.querySelectorAll('.tab-panel');
+
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        panels.forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+        // Trigger reveals in newly shown panel
+        triggerReveals();
+      });
+    });
+
+    // Scroll reveal
+    function triggerReveals() {
+      const reveals = document.querySelectorAll('.tab-panel.active .reveal:not(.visible)');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const siblings = [...entry.target.closest('.tab-panel').querySelectorAll('.reveal:not(.visible)')];
+            const delay = Math.min(siblings.indexOf(entry.target) * 100, 400);
+            setTimeout(() => entry.target.classList.add('visible'), delay);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+      reveals.forEach(el => observer.observe(el));
+    }
+
+    triggerReveals();
+  </script>
+
+</body>
+</html>

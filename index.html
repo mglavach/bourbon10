@@ -1372,7 +1372,10 @@
         recList.innerHTML = '<p class="rec-empty">No recommendations yet. Be the first to add one.</p>';
         return;
       }
-      recList.innerHTML = recs.map(r => `
+      const sorted = [...recs].sort((a, b) =>
+        (a.Bottle || a.bottle || '').localeCompare(b.Bottle || b.bottle || '')
+      );
+      recList.innerHTML = sorted.map(r => `
         <div class="rec-card">
           <div class="rec-card-stars">${starString(r.Rating || r.rating)}</div>
           <div class="rec-card-bottle">${escapeHtml(r.Bottle || r.bottle)}</div>

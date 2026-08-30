@@ -264,6 +264,94 @@
 
     .trail-section-footer a:hover { color: var(--gold-pale); border-color: var(--gold-pale); }
 
+    /* ── ADD-A-PLACE FORM ────────────────────────────── */
+    .place-form {
+      background: var(--charcoal);
+      border: 1px solid rgba(201,145,42,0.15);
+      padding: 2rem 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .place-form-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .place-field { margin-bottom: 1.3rem; }
+
+    .place-field label {
+      display: block;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
+    }
+
+    .place-field input,
+    .place-field select,
+    .place-field textarea {
+      width: 100%;
+      background: var(--charcoal-mid);
+      border: 1px solid rgba(201,145,42,0.2);
+      color: var(--cream);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      padding: 0.75rem 0.9rem;
+      transition: border-color 0.2s;
+    }
+
+    .place-field select { cursor: pointer; }
+
+    .place-field input::placeholder,
+    .place-field textarea::placeholder { color: var(--text-muted); }
+
+    .place-field input:focus,
+    .place-field select:focus,
+    .place-field textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+
+    .place-field textarea { resize: vertical; font-family: inherit; line-height: 1.6; }
+
+    .place-submit {
+      padding: 0.9rem 2.2rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, var(--gold) 0%, #A06B10 100%);
+      color: var(--black);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .place-submit:hover {
+      background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(201,145,42,0.3);
+    }
+
+    .place-status {
+      margin-top: 1rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      min-height: 1.2em;
+    }
+
+    .place-status.error { color: #C97A7A; }
+    .place-status.success { color: var(--gold-light); }
+
+    @media (max-width: 700px) {
+      .place-form-row { grid-template-columns: 1fr; }
+      .place-form { padding: 1.8rem; }
+    }
+
     /* ── ANIMATIONS ─────────────────────────────────── */
     .reveal {
       opacity: 0;
@@ -343,6 +431,35 @@
             Places on the radar for the next trip. Vote up the ones you want on the itinerary.
           </p>
         </div>
+        <form class="place-form" id="place-form">
+          <div class="place-form-row">
+            <div class="place-field">
+              <label for="place-name">Place Name</label>
+              <input type="text" id="place-name" maxlength="100" placeholder="e.g. Maker's Mark" required />
+            </div>
+            <div class="place-field">
+              <label for="place-type">Type</label>
+              <select id="place-type">
+                <option value="Distillery">Distillery</option>
+                <option value="Bar (21+)">Bar (21+)</option>
+                <option value="Activity">Activity</option>
+                <option value="NDP / Independent Bottler">NDP / Independent Bottler</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="place-field">
+              <label for="place-city">City</label>
+              <input type="text" id="place-city" maxlength="60" placeholder="e.g. Loretto, KY" />
+            </div>
+          </div>
+          <div class="place-field">
+            <label for="place-note">Why It Belongs (Optional)</label>
+            <textarea id="place-note" maxlength="300" rows="2" placeholder="What makes it worth the drive..."></textarea>
+          </div>
+          <button type="submit" class="place-submit">Add To The Watchlist</button>
+          <p class="place-status" id="place-status"></p>
+        </form>
+
         <div class="trail-grid" id="recommended-grid">
           <p class="trail-empty">Loading&hellip;</p>
         </div>
@@ -366,6 +483,15 @@
 
     function votedKey(name, voteType) {
       return `trail_voted_${voteType}_${name}`;
+    }
+
+    function getVoterName() {
+      let voter = localStorage.getItem('trail_voter_name');
+      if (!voter) {
+        voter = (window.prompt('What\'s your first name? (So everyone only gets one vote per place.)') || '').trim();
+        if (voter) localStorage.setItem('trail_voter_name', voter);
+      }
+      return voter;
     }
 
     function renderCard(place, voteType) {
@@ -414,18 +540,28 @@
         btn.addEventListener('click', () => {
           const name = btn.dataset.name;
           const voteType = btn.dataset.voteType;
+
+          const voter = getVoterName();
+          if (!voter) return; // user cancelled the name prompt
+
           btn.disabled = true;
 
           fetch(TRAIL_API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ action: 'vote', name, voteType }),
+            body: JSON.stringify({ action: 'vote', name, voteType, voter }),
           })
             .then(res => res.json())
             .then(data => {
               if (data.ok) {
                 localStorage.setItem(votedKey(name, voteType), '1');
                 btn.querySelector('.vote-count').textContent = `(${data.count})`;
+                btn.querySelector('.vote-label').textContent = voteType === 'liked' ? 'You Liked It' : "You're In";
+              } else if (data.error === 'already_voted') {
+                localStorage.setItem(votedKey(name, voteType), '1');
+                if (typeof data.count === 'number') {
+                  btn.querySelector('.vote-count').textContent = `(${data.count})`;
+                }
                 btn.querySelector('.vote-label').textContent = voteType === 'liked' ? 'You Liked It' : "You're In";
               } else {
                 btn.disabled = false;
@@ -481,6 +617,55 @@
     }
 
     loadTrail();
+
+    // Add-a-place form
+    const placeForm = document.getElementById('place-form');
+    const placeStatus = document.getElementById('place-status');
+
+    placeForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('place-name').value.trim();
+      const type = document.getElementById('place-type').value;
+      const city = document.getElementById('place-city').value.trim();
+      const note = document.getElementById('place-note').value.trim();
+
+      if (!name) {
+        placeStatus.textContent = 'Give it a name first.';
+        placeStatus.className = 'place-status error';
+        return;
+      }
+
+      if (!TRAIL_API_URL) {
+        placeStatus.textContent = 'Submissions are not connected yet. Check back soon.';
+        placeStatus.className = 'place-status error';
+        return;
+      }
+
+      placeStatus.textContent = 'Adding it to the watchlist…';
+      placeStatus.className = 'place-status';
+
+      fetch(TRAIL_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'add', name, type, city, note, status: 'Recommended' }),
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.ok) {
+            placeStatus.textContent = 'Added! Cheers to that.';
+            placeStatus.className = 'place-status success';
+            placeForm.reset();
+            loadTrail();
+          } else {
+            placeStatus.textContent = data.error || 'Something went wrong. Try again.';
+            placeStatus.className = 'place-status error';
+          }
+        })
+        .catch(() => {
+          placeStatus.textContent = "Couldn't reach the trail. Try again later.";
+          placeStatus.className = 'place-status error';
+        });
+    });
 
     // Scroll reveal
     const reveals = document.querySelectorAll('.reveal');

@@ -452,9 +452,10 @@
       fetch(TRAIL_API_URL)
         .then(res => res.json())
         .then(places => {
-          const been = places.filter(p => (p.Status || '').toLowerCase() === 'been');
-          const upcoming = places.filter(p => (p.Status || '').toLowerCase() === 'upcoming');
-          const recommended = places.filter(p => (p.Status || '').toLowerCase() === 'recommended');
+          const byName = (a, b) => (a.Name || '').localeCompare(b.Name || '');
+          const been = places.filter(p => (p.Status || '').toLowerCase() === 'been').sort(byName);
+          const upcoming = places.filter(p => (p.Status || '').toLowerCase() === 'upcoming').sort(byName);
+          const recommended = places.filter(p => ['recommended', 'watchlist'].includes((p.Status || '').toLowerCase())).sort(byName);
 
           beenGrid.innerHTML = been.length
             ? been.map(p => renderCard(p, 'liked')).join('')

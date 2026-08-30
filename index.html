@@ -1316,6 +1316,36 @@
     const recList = document.getElementById('rec-list');
     const recEmpty = document.getElementById('rec-empty');
 
+    // Synthesized "clinking glasses" sound, played on a successful submission.
+    // No audio file needed: two bright, quickly-decaying tones layered together.
+    let audioCtx;
+    function playClinkSound() {
+      try {
+        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        const now = audioCtx.currentTime;
+        const master = audioCtx.createGain();
+        master.gain.value = 0.22;
+        master.connect(audioCtx.destination);
+
+        [{ freq: 2600, delay: 0 }, { freq: 3400, delay: 0.04 }].forEach(({ freq, delay }) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          const start = now + delay;
+          gain.gain.setValueAtTime(0, start);
+          gain.gain.linearRampToValueAtTime(1, start + 0.005);
+          gain.gain.exponentialRampToValueAtTime(0.001, start + 0.5);
+          osc.connect(gain);
+          gain.connect(master);
+          osc.start(start);
+          osc.stop(start + 0.55);
+        });
+      } catch (err) {
+        // Audio isn't critical to functionality; fail silently.
+      }
+    }
+
     recStars.querySelectorAll('.rec-star').forEach(star => {
       star.addEventListener('click', () => {
         const value = Number(star.dataset.value);
@@ -1367,6 +1397,11 @@
 
     recForm.addEventListener('submit', (e) => {
       e.preventDefault();
+      // Prime the AudioContext synchronously within this user gesture so it isn't
+      // blocked by autoplay policy when playClinkSound() runs later after the fetch resolves.
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+
       const bottle = document.getElementById('rec-bottle').value.trim();
       const name = document.getElementById('rec-name').value.trim();
       const note = document.getElementById('rec-note').value.trim();
@@ -1395,6 +1430,7 @@
         .then(res => res.json())
         .then(data => {
           if (data.ok) {
+            playClinkSound();
             recStatus.textContent = 'Added! Cheers to that.';
             recStatus.className = 'rec-status success';
             recForm.reset();

@@ -441,6 +441,20 @@
       font-weight: 500;
     }
 
+    .stop-note a,
+    .map-pin-note a {
+      color: var(--gold-light);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(228,178,74,0.4);
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .stop-note a:hover,
+    .map-pin-note a:hover {
+      color: var(--gold-pale);
+      border-color: var(--gold-pale);
+    }
+
     /* ── TRIP MAP ───────────────────────────────────── */
     .map-section { margin-top: 3rem; }
 
@@ -848,10 +862,9 @@
           </div>
           <div class="stop">
             <div class="stop-type">Distillery &bull; 3:00 PM</div>
-            <div class="stop-name">Rabbit Hole Distillery</div>
+            <div class="stop-name">Louisville Rickhouse Whisky Co</div>
             <div class="stop-note">
-              Louisville's art-forward distillery. Five-story glass atrium, open-air rickhouse views, and bourbon that earns its shelf space.
-              <strong>$50 per person.</strong>
+              A NuLu whiskey tasting experience &mdash; guided flights and rickhouse-style tours in the heart of downtown Louisville.
             </div>
           </div>
           <div class="stop">
@@ -928,6 +941,7 @@
             <div class="stop-note">
               We end on the hill. Pot Still Reserve, Family Estate, the Purple Top that started conversations at The Last Refuge.
               <strong>A fitting way to close out the weekend.</strong>
+              <a href="https://maps.apple.com/place?place-id=I86F54E2D5E44D77A" target="_blank" rel="noopener">View on map &rarr;</a>
             </div>
           </div>
         </div>
@@ -1018,8 +1032,8 @@
   <script>
     // Trip map
     const stops = [
-      { day: 1, type: 'Distillery', name: 'Rabbit Hole Distillery', lat: 38.2524, lng: -85.7397,
-        note: "Louisville's art-forward distillery. $50 per person." },
+      { day: 1, type: 'Distillery', name: 'Louisville Rickhouse Whisky Co', lat: 38.2538, lng: -85.7392,
+        note: "NuLu whiskey tasting experience &mdash; guided flights and rickhouse-style tours." },
       { day: 1, type: 'Bar &bull; Must-Do', name: 'The Last Refuge', lat: 38.2533, lng: -85.7419,
         note: "Bob Dylan's bourbon bar in a converted old Methodist church." },
       { day: 2, type: 'Distillery &bull; Icon', name: 'Buffalo Trace', lat: 38.2148, lng: -84.8682,
@@ -1031,7 +1045,7 @@
       { day: 3, type: 'Distillery &bull; Heritage', name: 'Heaven Hill', lat: 37.7932, lng: -85.4657,
         note: "America's largest independent, family-owned spirits company." },
       { day: 3, type: 'Distillery &bull; The Closer', name: 'Willett Distillery', lat: 37.7848, lng: -85.4613,
-        note: "We end on the hill. A fitting way to close out the weekend." },
+        note: 'We end on the hill. A fitting way to close out the weekend. <a href="https://maps.apple.com/place?place-id=I86F54E2D5E44D77A" target="_blank" rel="noopener">View on map &rarr;</a>' },
     ];
 
     const map = L.map('trip-map', { scrollWheelZoom: false });

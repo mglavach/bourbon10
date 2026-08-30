@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Trail | Bourbon 10</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:        #C9912A;
+      --gold-light:  #E4B24A;
+      --gold-pale:   #F5D98B;
+      --black:       #0A0A0A;
+      --charcoal:    #1A1A1A;
+      --charcoal-mid:#2C2C2C;
+      --cream:       #F5EFE0;
+      --cream-dark:  #DDD0B4;
+      --text-muted:  #8A8070;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--cream);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 4rem;
+      background: rgba(10,10,10,0.97);
+      border-bottom: 1px solid rgba(201,145,42,0.2);
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--cream-dark);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--gold); }
+
+    /* ── PAGE HEADER ────────────────────────────────── */
+    .page-header {
+      padding: 9rem 2rem 4rem;
+      text-align: center;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 0%, rgba(201,145,42,0.1) 0%, transparent 70%),
+        var(--black);
+      border-bottom: 1px solid rgba(201,145,42,0.12);
+    }
+
+    .page-eyebrow {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      color: var(--cream);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .page-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-style: italic;
+      color: var(--text-muted);
+    }
+
+    /* ── TRAIL CONTENT ──────────────────────────────── */
+    .trail-panel { padding: 5rem 2rem 7rem; }
+    .panel-inner { max-width: 1100px; margin: 0 auto; }
+
+    .trail-section { margin-bottom: 5rem; }
+    .trail-section:last-child { margin-bottom: 0; }
+
+    .trail-section-header { margin-bottom: 2.5rem; }
+
+    .trail-section-eyebrow {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
+    }
+
+    .trail-section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 0.6rem;
+    }
+
+    .trail-section-intro {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--text-muted);
+      max-width: 640px;
+    }
+
+    .trail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .trail-card {
+      background: var(--charcoal);
+      border: 1px solid rgba(201,145,42,0.15);
+      padding: 1.8rem 2rem;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+
+    .trail-card:hover {
+      border-color: rgba(201,145,42,0.4);
+      transform: translateY(-3px);
+    }
+
+    .trail-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(to right, var(--gold), transparent);
+    }
+
+    .trail-card-type {
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .trail-card-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 0.3rem;
+    }
+
+    .trail-card-city {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      margin-bottom: 0.8rem;
+    }
+
+    .trail-card-note {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 1.2rem;
+      flex-grow: 1;
+    }
+
+    .vote-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      align-self: flex-start;
+      padding: 0.55rem 1.1rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: rgba(201,145,42,0.08);
+      border: 1px solid rgba(201,145,42,0.3);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .vote-btn:hover:not(:disabled) {
+      background: rgba(201,145,42,0.18);
+      border-color: var(--gold);
+    }
+
+    .vote-btn:disabled {
+      color: var(--gold-light);
+      background: rgba(201,145,42,0.15);
+      border-color: rgba(201,145,42,0.4);
+      cursor: default;
+      opacity: 0.9;
+    }
+
+    .vote-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .vote-count { font-variant-numeric: tabular-nums; }
+
+    .trail-empty {
+      grid-column: 1 / -1;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .trail-section-footer {
+      margin-top: 1.5rem;
+      font-size: 0.75rem;
+    }
+
+    .trail-section-footer a {
+      color: var(--gold-light);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(228,178,74,0.4);
+    }
+
+    .trail-section-footer a:hover { color: var(--gold-pale); border-color: var(--gold-pale); }
+
+    /* ── ANIMATIONS ─────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ─────────────────────────────────── */
+    @media (max-width: 780px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">B10</a>
+    <ul class="nav-links">
+      <li><a href="index.html#origin">Our Story</a></li>
+      <li><a href="index.html#mission">Mission</a></li>
+      <li><a href="index.html#pillars">Pillars</a></li>
+      <li><a href="index.html#vault">The Vault</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="trail.html" class="active">The Trail</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+    <p class="page-eyebrow">Every Stop, Every Story</p>
+    <h1 class="page-title">The Trail</h1>
+    <p class="page-sub">Where we've been. Where we're headed. Where we're going next.</p>
+  </header>
+
+  <div class="trail-panel">
+    <div class="panel-inner">
+
+      <!-- WHERE WE'VE BEEN -->
+      <section class="trail-section">
+        <div class="trail-section-header reveal">
+          <p class="trail-section-eyebrow">The Record</p>
+          <h2 class="trail-section-title">Where We've Been</h2>
+          <p class="trail-section-intro">
+            Stops we've already made. Give one a nod if you were there and it earned its keep.
+          </p>
+        </div>
+        <div class="trail-grid" id="been-grid">
+          <p class="trail-empty">Loading&hellip;</p>
+        </div>
+      </section>
+
+      <!-- WHERE WE'RE HEADED -->
+      <section class="trail-section">
+        <div class="trail-section-header reveal">
+          <p class="trail-section-eyebrow">Locked In</p>
+          <h2 class="trail-section-title">Where We're Headed</h2>
+          <p class="trail-section-intro">
+            The confirmed lineup for the next trip.
+          </p>
+        </div>
+        <div class="trail-grid" id="upcoming-grid">
+          <p class="trail-empty">Loading&hellip;</p>
+        </div>
+        <p class="trail-section-footer"><a href="events.html">See the full itinerary &rarr;</a></p>
+      </section>
+
+      <!-- RECOMMENDED FOR THE FUTURE -->
+      <section class="trail-section">
+        <div class="trail-section-header reveal">
+          <p class="trail-section-eyebrow">The Watchlist</p>
+          <h2 class="trail-section-title">Recommended For The Future</h2>
+          <p class="trail-section-intro">
+            Places on the radar for the next trip. Vote up the ones you want on the itinerary.
+          </p>
+        </div>
+        <div class="trail-grid" id="recommended-grid">
+          <p class="trail-empty">Loading&hellip;</p>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script>
+    // Trail data (backed by the same Google Sheet + Apps Script web app as the Vault, on a separate "Trail" tab)
+    const TRAIL_API_URL = '';
+
+    const thumbIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10v11"/><path d="M15 5.88 14 10h6.29a2 2 0 0 1 1.94 2.5l-1.68 7A2 2 0 0 1 18.62 21H7a2 2 0 0 1-2-2v-8a2 2 0 0 1 .53-1.36L11 4a2 2 0 0 1 3 1.75V5.9Z"/></svg>`;
+    const flagIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V4a1 1 0 0 1 1-1h11.5a1 1 0 0 1 .9 1.45L15 9l2.4 4.55A1 1 0 0 1 16.5 15H5"/></svg>`;
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str == null ? '' : String(str);
+      return div.innerHTML;
+    }
+
+    function votedKey(name, voteType) {
+      return `trail_voted_${voteType}_${name}`;
+    }
+
+    function renderCard(place, voteType) {
+      const name = place.Name || '';
+      const type = place.Type || '';
+      const city = place.City || '';
+      const note = place.Note || '';
+      const count = Number(voteType === 'liked' ? place.Liked : place.WantToGo) || 0;
+      const already = localStorage.getItem(votedKey(name, voteType)) === '1';
+      const icon = voteType === 'liked' ? thumbIcon : flagIcon;
+      const label = voteType === 'liked' ? 'I Liked It' : 'I Want To Go';
+      const votedLabel = voteType === 'liked' ? 'You Liked It' : "You're In";
+
+      return `
+        <div class="trail-card">
+          ${type ? `<div class="trail-card-type">${escapeHtml(type)}</div>` : ''}
+          <div class="trail-card-name">${escapeHtml(name)}</div>
+          ${city ? `<div class="trail-card-city">${escapeHtml(city)}</div>` : ''}
+          ${note ? `<p class="trail-card-note">${escapeHtml(note)}</p>` : '<p class="trail-card-note"></p>'}
+          <button type="button" class="vote-btn" data-name="${escapeHtml(name)}" data-vote-type="${voteType}" ${already ? 'disabled' : ''}>
+            ${icon}
+            <span class="vote-label">${already ? votedLabel : label}</span>
+            <span class="vote-count">(${count})</span>
+          </button>
+        </div>
+      `;
+    }
+
+    function renderPlain(place) {
+      const name = place.Name || '';
+      const type = place.Type || '';
+      const city = place.City || '';
+      const note = place.Note || '';
+      return `
+        <div class="trail-card">
+          ${type ? `<div class="trail-card-type">${escapeHtml(type)}</div>` : ''}
+          <div class="trail-card-name">${escapeHtml(name)}</div>
+          ${city ? `<div class="trail-card-city">${escapeHtml(city)}</div>` : ''}
+          ${note ? `<p class="trail-card-note">${escapeHtml(note)}</p>` : ''}
+        </div>
+      `;
+    }
+
+    function attachVoteHandlers(container) {
+      container.querySelectorAll('.vote-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const name = btn.dataset.name;
+          const voteType = btn.dataset.voteType;
+          btn.disabled = true;
+
+          fetch(TRAIL_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ sheet: 'trail', action: 'vote', name, voteType }),
+          })
+            .then(res => res.json())
+            .then(data => {
+              if (data.ok) {
+                localStorage.setItem(votedKey(name, voteType), '1');
+                btn.querySelector('.vote-count').textContent = `(${data.count})`;
+                btn.querySelector('.vote-label').textContent = voteType === 'liked' ? 'You Liked It' : "You're In";
+              } else {
+                btn.disabled = false;
+              }
+            })
+            .catch(() => { btn.disabled = false; });
+        });
+      });
+    }
+
+    function loadTrail() {
+      const beenGrid = document.getElementById('been-grid');
+      const upcomingGrid = document.getElementById('upcoming-grid');
+      const recommendedGrid = document.getElementById('recommended-grid');
+
+      if (!TRAIL_API_URL) {
+        const msg = '<p class="trail-empty">Coming soon.</p>';
+        beenGrid.innerHTML = msg;
+        upcomingGrid.innerHTML = msg;
+        recommendedGrid.innerHTML = msg;
+        return;
+      }
+
+      fetch(`${TRAIL_API_URL}?sheet=trail`)
+        .then(res => res.json())
+        .then(places => {
+          const been = places.filter(p => (p.Status || '').toLowerCase() === 'been');
+          const upcoming = places.filter(p => (p.Status || '').toLowerCase() === 'upcoming');
+          const recommended = places.filter(p => (p.Status || '').toLowerCase() === 'recommended');
+
+          beenGrid.innerHTML = been.length
+            ? been.map(p => renderCard(p, 'liked')).join('')
+            : '<p class="trail-empty">No stops logged yet.</p>';
+
+          upcomingGrid.innerHTML = upcoming.length
+            ? upcoming.map(renderPlain).join('')
+            : '<p class="trail-empty">Nothing locked in yet.</p>';
+
+          recommendedGrid.innerHTML = recommended.length
+            ? recommended.map(p => renderCard(p, 'wantToGo')).join('')
+            : '<p class="trail-empty">No recommendations yet.</p>';
+
+          attachVoteHandlers(beenGrid);
+          attachVoteHandlers(recommendedGrid);
+        })
+        .catch(() => {
+          const msg = '<p class="trail-empty">Couldn\'t load the trail right now. Try again later.</p>';
+          beenGrid.innerHTML = msg;
+          upcomingGrid.innerHTML = msg;
+          recommendedGrid.innerHTML = msg;
+        });
+    }
+
+    loadTrail();
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>

@@ -353,7 +353,7 @@
 
   <script>
     // Trail data (backed by the same Google Sheet + Apps Script web app as the Vault, on a separate "Trail" tab)
-    const TRAIL_API_URL = '';
+    const TRAIL_API_URL = 'https://script.google.com/macros/s/AKfycbxkIPXmabn03R3Ff9jpH01UtBMokpFmFszJvkLGjzsSvHHPlPVOPQJ6T7WsS-i2Wjjz/exec';
 
     const thumbIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10v11"/><path d="M15 5.88 14 10h6.29a2 2 0 0 1 1.94 2.5l-1.68 7A2 2 0 0 1 18.62 21H7a2 2 0 0 1-2-2v-8a2 2 0 0 1 .53-1.36L11 4a2 2 0 0 1 3 1.75V5.9Z"/></svg>`;
     const flagIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V4a1 1 0 0 1 1-1h11.5a1 1 0 0 1 .9 1.45L15 9l2.4 4.55A1 1 0 0 1 16.5 15H5"/></svg>`;
@@ -419,7 +419,7 @@
           fetch(TRAIL_API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ sheet: 'trail', action: 'vote', name, voteType }),
+            body: JSON.stringify({ action: 'vote', name, voteType }),
           })
             .then(res => res.json())
             .then(data => {
@@ -449,7 +449,7 @@
         return;
       }
 
-      fetch(`${TRAIL_API_URL}?sheet=trail`)
+      fetch(TRAIL_API_URL)
         .then(res => res.json())
         .then(places => {
           const been = places.filter(p => (p.Status || '').toLowerCase() === 'been');

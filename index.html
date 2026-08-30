@@ -700,13 +700,13 @@
 
     .rec-field textarea { resize: vertical; font-family: inherit; line-height: 1.6; }
 
-    .rec-stars { display: flex; gap: 0.4rem; }
+    .rec-stars { display: flex; flex-wrap: wrap; gap: 0.25rem; }
 
     .rec-star {
       background: none;
       border: none;
       cursor: pointer;
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       line-height: 1;
       color: rgba(201,145,42,0.25);
       transition: color 0.15s, transform 0.15s;
@@ -1238,6 +1238,11 @@
                 <button type="button" class="rec-star" data-value="3">&#9733;</button>
                 <button type="button" class="rec-star" data-value="4">&#9733;</button>
                 <button type="button" class="rec-star" data-value="5">&#9733;</button>
+                <button type="button" class="rec-star" data-value="6">&#9733;</button>
+                <button type="button" class="rec-star" data-value="7">&#9733;</button>
+                <button type="button" class="rec-star" data-value="8">&#9733;</button>
+                <button type="button" class="rec-star" data-value="9">&#9733;</button>
+                <button type="button" class="rec-star" data-value="10">&#9733;</button>
               </div>
             </div>
             <div class="rec-field">
@@ -1357,8 +1362,8 @@
     });
 
     function starString(rating) {
-      const n = Math.max(0, Math.min(5, Number(rating) || 0));
-      return '&#9733;'.repeat(n) + '&#9734;'.repeat(5 - n);
+      const n = Math.max(0, Math.min(10, Number(rating) || 0));
+      return '&#9733;'.repeat(n) + '&#9734;'.repeat(10 - n);
     }
 
     function escapeHtml(str) {
@@ -1372,9 +1377,18 @@
         recList.innerHTML = '<p class="rec-empty">No recommendations yet. Be the first to add one.</p>';
         return;
       }
-      const sorted = [...recs].sort((a, b) =>
-        (a.Bottle || a.bottle || '').localeCompare(b.Bottle || b.bottle || '')
-      );
+      const sorted = [...recs].sort((a, b) => {
+        const ratingA = Number(a.Rating || a.rating || 0);
+        const ratingB = Number(b.Rating || b.rating || 0);
+        if (ratingB !== ratingA) return ratingB - ratingA; // highest rating first
+
+        const bottleCompare = (a.Bottle || a.bottle || '').localeCompare(b.Bottle || b.bottle || '');
+        if (bottleCompare !== 0) return bottleCompare; // then alphabetical
+
+        const dateA = new Date(a.TimeStamp || a.Timestamp || a.timestamp || 0).getTime();
+        const dateB = new Date(b.TimeStamp || b.Timestamp || b.timestamp || 0).getTime();
+        return dateB - dateA; // then newest first
+      });
       recList.innerHTML = sorted.map(r => `
         <div class="rec-card">
           <div class="rec-card-stars">${starString(r.Rating || r.rating)}</div>

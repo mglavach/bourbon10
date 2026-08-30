@@ -549,29 +549,240 @@
       line-height: 1.7;
     }
 
-    .vault-rule {
+    .rule-quote {
       grid-column: 1 / -1;
       background: var(--charcoal);
       border: 1px solid rgba(201,145,42,0.15);
-      border-left: 4px solid var(--gold);
-      padding: 2rem 2.5rem;
+      padding: 3rem 3rem 3rem 3.5rem;
+      display: grid;
+      grid-template-columns: 4px 1fr;
+      gap: 0 2.5rem;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .rule-quote-bar {
+      height: 100%;
+      min-height: 100px;
+      background: linear-gradient(to bottom, var(--gold), #7A4A10);
+      border-radius: 2px;
+    }
+
+    .rule-quote-body { position: relative; }
+
+    .rule-quote-mark {
+      font-family: 'Playfair Display', serif;
+      font-size: 6rem;
+      line-height: 0.7;
+      color: var(--gold);
+      opacity: 0.18;
+      position: absolute;
+      top: -0.8rem;
+      left: -1rem;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .rule-quote-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.15rem, 2.5vw, 1.5rem);
+      font-style: italic;
+      color: var(--cream);
+      line-height: 1.6;
+      margin-bottom: 1.2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .rule-quote-text strong {
+      font-style: normal;
+      color: var(--gold);
+    }
+
+    .rule-quote-attribution {
       display: flex;
       align-items: center;
+      gap: 1rem;
+    }
+
+    .rule-quote-attr-line {
+      width: 28px;
+      height: 1px;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .rule-quote-attr-text {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    @media (max-width: 600px) {
+      .rule-quote { grid-template-columns: 3px 1fr; padding: 2.5rem 1.8rem; gap: 0 1.5rem; }
+    }
+
+    /* ── VAULT: COMMUNITY PICKS ─────────────────────── */
+    .vault-community {
+      grid-column: 1 / -1;
+      margin-top: 1rem;
+      padding-top: 3rem;
+      border-top: 1px solid rgba(201,145,42,0.15);
+    }
+
+    .community-header { margin-bottom: 2rem; }
+
+    .community-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 0.6rem;
+    }
+
+    .community-intro {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--text-muted);
+      max-width: 560px;
+    }
+
+    .rec-form {
+      background: var(--charcoal);
+      border: 1px solid rgba(201,145,42,0.15);
+      padding: 2rem 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .rec-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 1.5rem;
     }
 
-    .vault-rule-icon { font-size: 1.8rem; flex-shrink: 0; }
+    .rec-field { margin-bottom: 1.3rem; }
 
-    .vault-rule-text {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.2rem;
-      font-style: italic;
-      color: var(--cream-dark);
+    .rec-field label {
+      display: block;
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
     }
 
-    .vault-rule-text strong {
+    .rec-field input,
+    .rec-field textarea {
+      width: 100%;
+      background: var(--charcoal-mid);
+      border: 1px solid rgba(201,145,42,0.2);
+      color: var(--cream);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      padding: 0.75rem 0.9rem;
+      transition: border-color 0.2s;
+    }
+
+    .rec-field input::placeholder,
+    .rec-field textarea::placeholder { color: var(--text-muted); }
+
+    .rec-field input:focus,
+    .rec-field textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+
+    .rec-field textarea { resize: vertical; font-family: inherit; line-height: 1.6; }
+
+    .rec-stars { display: flex; gap: 0.4rem; }
+
+    .rec-star {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+      line-height: 1;
+      color: rgba(201,145,42,0.25);
+      transition: color 0.15s, transform 0.15s;
+      padding: 0;
+    }
+
+    .rec-star:hover { transform: scale(1.15); }
+    .rec-star.filled { color: var(--gold); }
+
+    .rec-submit {
+      margin-top: 0.5rem;
+    }
+
+    .rec-status {
+      margin-top: 1rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      min-height: 1.2em;
+    }
+
+    .rec-status.error { color: #C97A7A; }
+    .rec-status.success { color: var(--gold-light); }
+
+    .rec-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .rec-card {
+      background: var(--charcoal);
+      border: 1px solid rgba(201,145,42,0.12);
+      padding: 1.5rem 1.7rem;
+    }
+
+    .rec-card-stars {
       color: var(--gold);
-      font-style: normal;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.6rem;
+    }
+
+    .rec-card-bottle {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 0.4rem;
+    }
+
+    .rec-card-note {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 0.8rem;
+    }
+
+    .rec-card-by {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .rec-empty {
+      grid-column: 1 / -1;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 600px) {
+      .rec-form-row { grid-template-columns: 1fr; gap: 0; }
+      .rec-form { padding: 1.8rem; }
     }
 
     /* ── CHESTERTON QUOTE ────────────────────────── */
@@ -985,11 +1196,61 @@
             The namesake pour. The one we keep coming back to.
           </p>
         </div>
-        <div class="vault-rule reveal">
-          <span class="vault-rule-icon">⚖️</span>
-          <p class="vault-rule-text">
-            <strong>The Golden Rule:</strong> Never drink alone. Never pour the cheap stuff for a brother.
-          </p>
+        <div class="rule-quote reveal">
+          <div class="rule-quote-bar"></div>
+          <div class="rule-quote-body">
+            <span class="rule-quote-mark">&ldquo;</span>
+            <p class="rule-quote-text">
+              <strong>Never drink alone.</strong> Never pour the cheap stuff for a brother.
+            </p>
+            <div class="rule-quote-attribution">
+              <div class="rule-quote-attr-line"></div>
+              <span class="rule-quote-attr-text">The Golden Rule</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="vault-community reveal">
+          <div class="community-header">
+            <p class="section-label">Add Your Own</p>
+            <h3 class="community-title">Brotherhood Recommendations</h3>
+            <p class="community-intro">
+              Got a bottle that deserves a spot in the vault? Add it below, rate it, and see what everyone else is pouring.
+            </p>
+          </div>
+
+          <form class="rec-form" id="rec-form">
+            <div class="rec-form-row">
+              <div class="rec-field">
+                <label for="rec-bottle">Bottle</label>
+                <input type="text" id="rec-bottle" maxlength="100" placeholder="e.g. Elijah Craig Barrel Proof" required />
+              </div>
+              <div class="rec-field">
+                <label for="rec-name">Your Name</label>
+                <input type="text" id="rec-name" maxlength="50" placeholder="Optional" />
+              </div>
+            </div>
+            <div class="rec-field">
+              <label>Rating</label>
+              <div class="rec-stars" id="rec-stars" data-rating="0">
+                <button type="button" class="rec-star" data-value="1">&#9733;</button>
+                <button type="button" class="rec-star" data-value="2">&#9733;</button>
+                <button type="button" class="rec-star" data-value="3">&#9733;</button>
+                <button type="button" class="rec-star" data-value="4">&#9733;</button>
+                <button type="button" class="rec-star" data-value="5">&#9733;</button>
+              </div>
+            </div>
+            <div class="rec-field">
+              <label for="rec-note">Why It Belongs (Optional)</label>
+              <textarea id="rec-note" maxlength="300" rows="2" placeholder="What makes it worth pouring..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-gold rec-submit">Add to the Vault</button>
+            <p class="rec-status" id="rec-status"></p>
+          </form>
+
+          <div class="rec-list" id="rec-list">
+            <p class="rec-empty" id="rec-empty">Loading recommendations&hellip;</p>
+          </div>
         </div>
       </div>
     </div>
@@ -1042,6 +1303,116 @@
     }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
 
     reveals.forEach(el => observer.observe(el));
+  </script>
+
+  <script>
+    // Community bottle recommendations (backed by a Google Sheet + Apps Script web app)
+    // Paste your deployed Apps Script /exec URL below once it's set up.
+    const VAULT_API_URL = '';
+
+    const recForm = document.getElementById('rec-form');
+    const recStars = document.getElementById('rec-stars');
+    const recStatus = document.getElementById('rec-status');
+    const recList = document.getElementById('rec-list');
+    const recEmpty = document.getElementById('rec-empty');
+
+    recStars.querySelectorAll('.rec-star').forEach(star => {
+      star.addEventListener('click', () => {
+        const value = Number(star.dataset.value);
+        recStars.dataset.rating = value;
+        recStars.querySelectorAll('.rec-star').forEach(s => {
+          s.classList.toggle('filled', Number(s.dataset.value) <= value);
+        });
+      });
+    });
+
+    function starString(rating) {
+      const n = Math.max(0, Math.min(5, Number(rating) || 0));
+      return '&#9733;'.repeat(n) + '&#9734;'.repeat(5 - n);
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str == null ? '' : String(str);
+      return div.innerHTML;
+    }
+
+    function renderRecs(recs) {
+      if (!recs || recs.length === 0) {
+        recList.innerHTML = '<p class="rec-empty">No recommendations yet. Be the first to add one.</p>';
+        return;
+      }
+      recList.innerHTML = recs.map(r => `
+        <div class="rec-card">
+          <div class="rec-card-stars">${starString(r.Rating || r.rating)}</div>
+          <div class="rec-card-bottle">${escapeHtml(r.Bottle || r.bottle)}</div>
+          ${(r.Note || r.note) ? `<p class="rec-card-note">${escapeHtml(r.Note || r.note)}</p>` : ''}
+          <div class="rec-card-by">&mdash; ${escapeHtml(r.Name || r.name || 'Anonymous')}</div>
+        </div>
+      `).join('');
+    }
+
+    function loadRecs() {
+      if (!VAULT_API_URL) {
+        recEmpty.textContent = 'Community ratings are coming soon.';
+        return;
+      }
+      fetch(VAULT_API_URL)
+        .then(res => res.json())
+        .then(renderRecs)
+        .catch(() => {
+          recEmpty.textContent = "Couldn't load recommendations right now. Try again later.";
+        });
+    }
+
+    recForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const bottle = document.getElementById('rec-bottle').value.trim();
+      const name = document.getElementById('rec-name').value.trim();
+      const note = document.getElementById('rec-note').value.trim();
+      const rating = Number(recStars.dataset.rating || 0);
+
+      if (!bottle || !rating) {
+        recStatus.textContent = 'Add a bottle name and a star rating first.';
+        recStatus.className = 'rec-status error';
+        return;
+      }
+
+      if (!VAULT_API_URL) {
+        recStatus.textContent = 'Submissions are not connected yet. Check back soon.';
+        recStatus.className = 'rec-status error';
+        return;
+      }
+
+      recStatus.textContent = 'Adding your bottle…';
+      recStatus.className = 'rec-status';
+
+      fetch(VAULT_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ bottle, name, rating, note }),
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.ok) {
+            recStatus.textContent = 'Added! Cheers to that.';
+            recStatus.className = 'rec-status success';
+            recForm.reset();
+            recStars.dataset.rating = 0;
+            recStars.querySelectorAll('.rec-star').forEach(s => s.classList.remove('filled'));
+            loadRecs();
+          } else {
+            recStatus.textContent = data.error || 'Something went wrong. Try again.';
+            recStatus.className = 'rec-status error';
+          }
+        })
+        .catch(() => {
+          recStatus.textContent = "Couldn't reach the vault. Try again later.";
+          recStatus.className = 'rec-status error';
+        });
+    });
+
+    loadRecs();
   </script>
 
 </body>

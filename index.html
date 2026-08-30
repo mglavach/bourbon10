@@ -1308,7 +1308,7 @@
   <script>
     // Community bottle recommendations (backed by a Google Sheet + Apps Script web app)
     // Paste your deployed Apps Script /exec URL below once it's set up.
-    const VAULT_API_URL = '';
+    const VAULT_API_URL = 'https://script.google.com/macros/s/AKfycbwiBKgBkZ7EMlUbpYEBRnEGcA-zUBhRcSXFJd8tmNXGAR8XCT5-VDiuj1Xg_5OZ9uH2/exec';
 
     const recForm = document.getElementById('rec-form');
     const recStars = document.getElementById('rec-stars');
@@ -1347,7 +1347,7 @@
           <div class="rec-card-stars">${starString(r.Rating || r.rating)}</div>
           <div class="rec-card-bottle">${escapeHtml(r.Bottle || r.bottle)}</div>
           ${(r.Note || r.note) ? `<p class="rec-card-note">${escapeHtml(r.Note || r.note)}</p>` : ''}
-          <div class="rec-card-by">&mdash; ${escapeHtml(r.Name || r.name || 'Anonymous')}</div>
+          <div class="rec-card-by">&mdash; ${escapeHtml(r.RecommendedBy || r.Name || r.name || 'Anonymous')}</div>
         </div>
       `).join('');
     }
